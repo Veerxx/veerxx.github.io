@@ -1,45 +1,56 @@
-async function handleSubmit(e) {
+// script.js
+document.addEventListener('DOMContentLoaded', function () {
 
-    e.preventDefault();
+    console.log('Portfolio loaded');
 
-    const form = e.target;
-    const submitBtn = form.querySelector('.form-submit');
-    const originalBtn = submitBtn.innerHTML;
+    const form = document.querySelector('.contact-form');
 
-    submitBtn.innerHTML = 'Sending...';
-    submitBtn.disabled = true;
+    if (form) {
+        form.addEventListener('submit', async function (e) {
 
-    const formData = new FormData(form);
+            e.preventDefault();
 
-    try {
+            const submitBtn = form.querySelector('.form-submit');
+            const originalBtn = submitBtn.innerHTML;
 
-        const response = await fetch('https://formspree.io/f/mreoaenj', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
+            submitBtn.innerHTML = 'Sending...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+
+            try {
+
+                const response = await fetch('https://formspree.io/f/mreoaenj', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+
+                    submitBtn.innerHTML = 'Message Sent ✓';
+                    form.reset();
+
+                } else {
+
+                    submitBtn.innerHTML = 'Failed to Send';
+
+                }
+
+            } catch (error) {
+
+                submitBtn.innerHTML = 'Error Occurred';
+
             }
+
+            setTimeout(() => {
+                submitBtn.innerHTML = originalBtn;
+                submitBtn.disabled = false;
+            }, 3000);
+
         });
-
-        if (response.ok) {
-
-            submitBtn.innerHTML = 'Message Sent ✓';
-            form.reset();
-
-        } else {
-
-            submitBtn.innerHTML = 'Failed';
-
-        }
-
-    } catch (error) {
-
-        submitBtn.innerHTML = 'Error';
-
     }
 
-    setTimeout(() => {
-        submitBtn.innerHTML = originalBtn;
-        submitBtn.disabled = false;
-    }, 3000);
-}
+});
